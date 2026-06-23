@@ -85,8 +85,8 @@ angular.module('ideShortcuts', ['ngSanitize'])
           {
             "shortcuts": [
                 {"description": "Search Everything / Actions", "eclipse": "Ctrl + 3", "vscode": "Ctrl + Shift + P", "intellij": "Double Shift", "visualstudio": "Ctrl + Q", "qt": "Ctrl + K"},
-                {"description": "Open File / Resource by Name", "eclipse": "Ctrl + Shift + R", "vscode": "Ctrl + P", "intellij": "Ctrl + Shift + N", "visualstudio": "Ctrl + ,", "qt": "Ctrl + K then type"},
-                {"description": "Go to Class / Type", "eclipse": "Ctrl + Shift + T", "vscode": "Ctrl + T", "intellij": "Ctrl + N", "visualstudio": "Ctrl + ,", "qt": "Ctrl + K then c"},
+                {"description": "Open File / Resource by Name", "eclipse": "Ctrl + Shift + R", "vscode": "Ctrl + P", "intellij": "Ctrl + Shift + N", "visualstudio": "Ctrl + ,", "qt": "Ctrl + K"},
+                {"description": "Go to Class / Type", "eclipse": "Ctrl + Shift + T", "vscode": "Ctrl + T", "intellij": "Ctrl + N", "visualstudio": "Ctrl + ,", "qt": "Ctrl + K, C"},
                 {"description": "Find Text Globally (In Files)", "eclipse": "Ctrl + H", "vscode": "Ctrl + Shift + F", "intellij": "Ctrl + Shift + F", "visualstudio": "Ctrl + Shift + F", "qt": "Ctrl + Shift + F"},
                 {"description": "Trigger Auto-Complete", "eclipse": "Ctrl + Space", "vscode": "Ctrl + Space", "intellij": "Ctrl + Space", "visualstudio": "Ctrl + Space", "qt": "Ctrl + Space"},
                 {"description": "Auto-Format Code (Reformat)", "eclipse": "Ctrl + Shift + F", "vscode": "Shift + Alt + F", "intellij": "Ctrl + Alt + L", "visualstudio": "Ctrl + K, Ctrl + D", "qt": "Ctrl + I"},
@@ -132,7 +132,7 @@ angular.module('ideShortcuts', ['ngSanitize'])
                 {"description": "Go to Previous Error / Warning", "eclipse": "Ctrl + ,", "vscode": "Shift + F8", "intellij": "Shift + F2", "visualstudio": "Shift + F8", "qt": "Alt + Up"},
                 {"description": "Navigate Forward (Forward History)", "eclipse": "Alt + Right Arrow", "vscode": "Alt + Right Arrow", "intellij": "Ctrl + Alt + Right", "visualstudio": "Ctrl + Shift + -", "qt": "Alt + Right Arrow"},
                 {"description": "Go to Last Edit Location", "eclipse": "Ctrl + Q", "vscode": "Ctrl + K Ctrl + Q", "intellij": "Ctrl + Shift + Backspace", "visualstudio": "Ctrl + Shift + Backspace", "qt": "Ctrl + Shift + Backspace"},
-                {"description": "Toggle Bookmark", "eclipse": "Ctrl + F10 then B", "vscode": "Ctrl + Alt + K", "intellij": "F11", "visualstudio": "Ctrl + K, Ctrl + K", "qt": "Ctrl + M"},
+                {"description": "Toggle Bookmark", "eclipse": "Ctrl + F10, B", "vscode": "Ctrl + Alt + K", "intellij": "F11", "visualstudio": "Ctrl + K, Ctrl + K", "qt": "Ctrl + M"},
                 {"description": "Go to Next Bookmark", "eclipse": "Via Context Menu", "vscode": "Ctrl + Alt + L", "intellij": "Ctrl + F11", "visualstudio": "Ctrl + K, Ctrl + N", "qt": "Ctrl + ."},
                 {"description": "Extract Variable Refactoring", "eclipse": "Alt + Shift + L", "vscode": "Via Quick Fix", "intellij": "Ctrl + Alt + V", "visualstudio": "Ctrl + R, Ctrl + V", "qt": "Via Context Menu"},
                 {"description": "Inline Variable Refactoring", "eclipse": "Alt + Shift + I", "vscode": "Via Quick Fix", "intellij": "Ctrl + Alt + N", "visualstudio": "Ctrl + R, Ctrl + I", "qt": "Via Context Menu"},
