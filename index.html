@@ -8,7 +8,19 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="app.css">
     <style>
-        body { padding-top:50px; }
+        body { 
+            padding-top:50px; 
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .navbar-default {
+            background-color: #2d2d2d;
+            border-color: #444;
+        }
+        .navbar-default .navbar-brand,
+        .navbar-default .navbar-nav > li > a {
+            color: #e0e0e0;
+        }
         .controls-row { margin-bottom: 20px; }
         .checkbox-container { padding-top: 6px; } /* Vertically centers text with the search input */
     </style>
@@ -21,7 +33,7 @@
 
 <div class="container" ng-app="ideShortcuts" ng-controller="mainController">
 
-    <div class="panel panel-default">
+    <div class="panel panel-default dark-mode-panel">
         <div class="panel-body">
             This page helps developers translate keyboard shortcuts between different IDEs.<br>
             Enter a shortcut key combination in the search box to quickly locate equivalent shortcuts across them.
@@ -33,34 +45,34 @@
         <!-- Search Bar (takes up 5 columns on medium+ screens) -->
         <div class="col-md-5 col-sm-12">
             <div class="input-group">
-                <div class="input-group-addon"><i class="fa fa-search" ng-hide="search"></i><i class="fa fa-times ng-cloak" ng-show="search" ng-click="search=''"></i></div>
-                <input name="searchField" autofocus type="text" class="form-control" placeholder="Shortcut quick search"
+                <div class="input-group-addon dark-mode-addon"><i class="fa fa-search" ng-hide="search"></i><i class="fa fa-times ng-cloak" ng-show="search" ng-click="search=''"></i></div>
+                <input name="searchField" autofocus type="text" class="form-control dark-mode-input" placeholder="Shortcut quick search"
                        ng-model="search" ng-keydown="onKeyDown($event)">
             </div>
         </div>
 
         <!-- Column Visibility Toggles (takes up 7 columns on medium+ screens, right aligned) -->
         <div class="col-md-7 col-sm-12 text-right checkbox-container">
-            <label class="checkbox-inline">
+            <label class="checkbox-inline dark-mode-label">
                 <input type="checkbox" ng-model="showCols.eclipse" ng-init="showCols.eclipse=true"> Eclipse
             </label>
-            <label class="checkbox-inline">
+            <label class="checkbox-inline dark-mode-label">
                 <input type="checkbox" ng-model="showCols.vscode" ng-init="showCols.vscode=true"> VS Code
             </label>
-            <label class="checkbox-inline">
+            <label class="checkbox-inline dark-mode-label">
                 <input type="checkbox" ng-model="showCols.intellij" ng-init="showCols.intellij=true"> IntelliJ
             </label>
-            <label class="checkbox-inline">
+            <label class="checkbox-inline dark-mode-label">
                 <input type="checkbox" ng-model="showCols.visualstudio" ng-init="showCols.visualstudio=true"> Visual Studio
             </label>
-            <label class="checkbox-inline">
+            <label class="checkbox-inline dark-mode-label">
                 <input type="checkbox" ng-model="showCols.qt" ng-init="showCols.qt=true"> QT
             </label>
         </div>
     </div>
 
     <!-- Table -->
-    <table class="table table-bordered table-striped">
+    <table class="table table-bordered table-striped dark-mode-table">
         <thead>
         <tr>
             <td style="background-color: #2D3748; color: white;">
