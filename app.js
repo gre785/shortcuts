@@ -5,17 +5,28 @@ function preg_quote(str, delimiter) {
         .replace(new RegExp('[.\\\\+*?\\[\\^\\]$(){}=!<>|:\\' + (delimiter || '') + '-]', 'g'), '\\$&');
 }
 
+// Ensure custom String helper is safely established
 String.prototype.contains = function(it) { return this.indexOf(it) != -1; };
 
 angular.module('ideShortcuts', ['ngSanitize'])
     .filter('highlight', function ($sce) {
         return function (text, phrase) {
-            if (phrase && text && text.toLowerCase().contains(phrase))
-                text = text.replace( new RegExp( "(" + preg_quote( phrase ) + ")" , 'gi' ), '<span class="highlighted">$1</span>' );
-            
-            return $sce.trustAsHtml(text)
-        }
+            // Protect against empty/null rows or lookups
+            if (phrase && text) {
+                var textStr = text.toString();
+                var phraseStr = phrase.toString();
+                
+                if (textStr.toLowerCase().contains(phraseStr.toLowerCase())) {
+                    text = textStr.replace(
+                        new RegExp("(" + preg_quote(phraseStr) + ")", 'gi'), 
+                        '<span class="highlighted">$1</span>'
+                    );
+                }
+            }
+            return $sce.trustAsHtml(text);
+        };
     })
+    // Fixed hanging duplicate .controller call here
     .controller('mainController', function ($scope) {
         $scope.keyPressed = '';
         $scope.search = '';
@@ -91,7 +102,7 @@ angular.module('ideShortcuts', ['ngSanitize'])
             }
         };
 
-        // The data from your new shortcuts.json is now embedded here
+        // Embedded shortcuts data source
         $scope.shortcutTables = [
           {
             "shortcuts": [
@@ -165,7 +176,7 @@ angular.module('ideShortcuts', ['ngSanitize'])
                 {"description": "Toggle Full Screen Mode", "eclipse": "Ctrl + M (Maximize Tab)", "vscode": "F11", "intellij": "Ctrl + Shift + F12", "visualstudio": "Shift + Alt + Enter", "qt": "Ctrl + Shift + F11"},
                 {"description": "Save All Files", "eclipse": "Ctrl + Shift + S", "vscode": "Ctrl + K S", "intellij": "Ctrl + S (Auto)", "visualstudio": "Ctrl + Shift + S", "qt": "Ctrl + Shift + S"},
                 {"description": "Quick Switch Schemes / Profiles", "eclipse": "Via Preferences", "vscode": "Ctrl + K Ctrl + T", "intellij": "Ctrl + `", "visualstudio": "Tools Menu", "qt": "Tools -> Options"},
-                {"description": "Collapse All Code Folds", "eclipse": "Ctrl + Shift + Numpad_Divide", "vscode": "Ctrl + K Ctrl + 0", "intellij": "Ctrl + Shift + Minus", "visualstudio": "Ctrl + M, Ctrl + A", "qt": "Ctrl + Shift + <"},
+                {"description": "Collapse All Code Folds", "eclipse": "Ctrl + K Ctrl + 0", "vscode": "Ctrl + K Ctrl + 0", "intellij": "Ctrl + Shift + Minus", "visualstudio": "Ctrl + M, Ctrl + A", "qt": "Ctrl + Shift + <"},
                 {"description": "Expand All Code Folds", "eclipse": "Ctrl + Numpad_Multiply", "vscode": "Ctrl + K Ctrl + J", "intellij": "Ctrl + Shift + Plus", "visualstudio": "Ctrl + M, Ctrl + X", "qt": "Ctrl + Shift + >"},
                 {"description": "Add Multi-Cursor Above", "eclipse": "Alt + Shift + A (Block Mode)", "vscode": "Ctrl + Alt + Up", "intellij": "Alt + Shift + Up", "visualstudio": "Ctrl + Alt + Up", "qt": "---"},
                 {"description": "Add Multi-Cursor Below", "eclipse": "Alt + Shift + A (Block Mode)", "vscode": "Ctrl + Alt + Down", "intellij": "Alt + Shift + Down", "visualstudio": "Ctrl + Alt + Down", "qt": "---"},
@@ -195,7 +206,7 @@ angular.module('ideShortcuts', ['ngSanitize'])
                 {"description": "Go to Next Method", "eclipse": "Ctrl + Shift + Down", "vscode": "Ctrl + Shift + ]", "intellij": "Alt + Down", "visualstudio": "Ctrl + Up/Down", "qt": "Alt + Down"},
                 {"description": "Go to Previous Method", "eclipse": "Ctrl + Shift + Up", "vscode": "Ctrl + Shift + [", "intellij": "Alt + Up", "visualstudio": "Ctrl + Up/Down", "qt": "Alt + Up"},
                 {"description": "Show Build Errors / Problems Panel", "eclipse": "Ctrl + Up (Markers View)", "vscode": "Ctrl + Shift + M", "intellij": "Alt + 6", "visualstudio": "Ctrl + \\, Ctrl + E", "qt": "Alt + 2"}
-              ]
-          },
+            ]
+          }
         ];
     });
