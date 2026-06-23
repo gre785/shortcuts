@@ -34,36 +34,56 @@ angular.module('ideShortcuts', ['ngSanitize'])
             return (param > 47 && param < 58) || param == 32 || (param > 64 && param < 91) || (param > 95 && param < 112) || (param > 185 && param < 193) || (param > 218 && param < 223);
         };
 
-        $scope.onKeyDown = function (event) {
-            if (isModifierPressed(event)) {
-                var result = '';
+        $scope.onKeyDown = function(event) {
+            // A map to convert key codes for special, non-printable keys into their names.
+            const specialKeyMap = {
+                8: 'Backspace', 9: 'Tab', 13: 'Enter', 16: 'Shift', 17: 'Ctrl', 18: 'Alt',
+                19: 'Pause/Break', 20: 'Caps Lock', 27: 'Esc', 32: 'Space', 33: 'Page Up',
+                34: 'Page Down', 35: 'End', 36: 'Home', 37: 'Left', 38: 'Up', 39: 'Right',
+                40: 'Down', 45: 'Insert', 46: 'Delete', 91: 'Windows', 93: 'Context Menu',
+                112: 'F1', 113: 'F2', 114: 'F3', 115: 'F4', 116: 'F5', 117: 'F6',
+                118: 'F7', 119: 'F8', 120: 'F9', 121: 'F10', 122: 'F11', 123: 'F12',
+                144: 'Num Lock', 145: 'Scroll Lock'
+            };
+
+            const isModifierPressed = event.ctrlKey || event.altKey || event.shiftKey;
+            const pressedKey = event.key; // Use event.key for modern browsers
+
+            if (isModifierPressed) {
+                event.preventDefault(); // Prevent default browser action for the shortcut
+
+                let result = '';
                 if (event.ctrlKey) result += 'Ctrl + ';
                 if (event.altKey) result += 'Alt + ';
                 if (event.shiftKey) result += 'Shift + ';
-                event.preventDefault();
-                $scope.search = result;
-                if(isValidCharacterKeyCode(event.keyCode))
-                    $scope.search += String.fromCharCode(event.which);
-                else{
-                    var specialKey = specialKeyPressed(event.keyCode)
-                    if (specialKey != null){
-                        var result = result || '';
-                        result += specialKey[event.keyCode];
-                        event.preventDefault();
-                        $scope.search = result;
-                    }
+
+                // Check if the pressed key is one of the modifiers themselves.
+                // If so, just show the modifiers.
+                if (['Control', 'Alt', 'Shift'].includes(pressedKey)) {
+                    $scope.search = result;
+                    return;
                 }
-            }
-            else {
-                if($scope.search.contains('+'))
+
+                // Use the modern `event.key` property for the character or name of the key.
+                // It correctly handles capitalization and special characters.
+                $scope.search = result + pressedKey;
+
+            } else if (specialKeyMap[event.keyCode]) {
+                // Handle cases where a special key is pressed WITHOUT a modifier (e.g., just "Delete")
+                event.preventDefault();
+                $scope.search = specialKeyMap[event.keyCode];
+            } else {
+                // This part handles regular text input when no modifiers are pressed.
+                // If the existing search is a shortcut, clear it before typing new text.
+                if ($scope.search.includes('+')) {
                     $scope.search = '';
+                }
             }
         };
 
         // The data from your new shortcuts.json is now embedded here
         $scope.shortcutTables = [
           {
-            "shortcutScope": "Multiline Editing",
             "shortcuts": [
               { "eclipse": "", "intellij": "Ctrl, Ctrl + Up", "description": "clone caret to upper position", "vscode": "Ctrl+Alt+Up" },
               { "eclipse": "", "intellij": "Ctrl, Ctrl + Down", "description": "clone caret to lower position", "vscode": "Ctrl+Alt+Down" },
@@ -73,12 +93,8 @@ angular.module('ideShortcuts', ['ngSanitize'])
               { "eclipse": "", "intellij": "Shift + Alt + Insert", "description": "Switch between column/line-selection-mode", "vscode": "Shift+Alt+I" },
               { "eclipse": "", "intellij": "Esc", "description": "leave multiline mode", "vscode": "Esc" },
               { "eclipse": "", "intellij": "Alt + J / Alt + Shift + J", "description": "select/unselect next occurence", "vscode": "Ctrl+D" },
-              { "eclipse": "", "intellij": "Ctrl + Alt + Shift + J", "description": "select all occurences", "vscode": "Ctrl+Shift+L" }
-            ]
-          },
-          {
-            "shortcutScope": "Editing",
-            "shortcuts": [
+              { "eclipse": "", "intellij": "Ctrl + Alt + Shift + J", "description": "select all occurences", "vscode": "Ctrl+Shift+L" },
+
               { "eclipse": "Ctrl + Space", "intellij": "Ctrl + Space", "description": "Basic code completion (the name of any class,method or variable)", "vscode": "Ctrl+Space" },
               { "eclipse": "", "intellij": "Ctrl + Shift + Space", "description": "Smart code completion (filters the list of methods and variables by expected type)", "vscode": "Ctrl+Space" },
               { "eclipse": "", "intellij": "Ctrl + Shift + Enter", "description": "Complete statement", "vscode": "" },
@@ -121,12 +137,8 @@ angular.module('ideShortcuts', ['ngSanitize'])
               { "eclipse": "Alt + Up", "intellij": "Ctrl + Shift + Up", "description": "Move line up", "vscode": "Alt+Up" },
               { "eclipse": "Alt + Down", "intellij": "Ctrl + Shift + Down", "description": "Move line down", "vscode": "Alt+Down" },
               { "eclipse": "Ctrl  + Up", "intellij": "", "description": "Scroll Line up", "vscode": "Ctrl+Up" },
-              { "eclipse": "Ctrl  + Down", "intellij": "", "description": "Scroll Line down", "vscode": "Ctrl+Down" }
-            ]
-          },
-          {
-            "shortcutScope": "Search and Replace",
-            "shortcuts": [
+              { "eclipse": "Ctrl  + Down", "intellij": "", "description": "Scroll Line down", "vscode": "Ctrl+Down" },
+
               { "eclipse": "", "intellij": "Double Shift", "description": "Search everywhere", "vscode": "Ctrl+P" },
               { "eclipse": "Ctrl + F", "intellij": "Ctrl + F", "description": "Find", "vscode": "Ctrl+F" },
               { "eclipse": "Ctrl + K", "intellij": "F3", "description": "Find next", "vscode": "F3" },
@@ -135,34 +147,22 @@ angular.module('ideShortcuts', ['ngSanitize'])
               { "eclipse": "Ctrl + H", "intellij": "Ctrl + Shift + F", "description": "Find in path", "vscode": "Ctrl+Shift+F" },
               { "eclipse": "", "intellij": "Ctrl + Shift + R", "description": "Replace in path", "vscode": "Ctrl+Shift+H" },
               { "eclipse": "", "intellij": "Ctrl + Shift + S", "description": "Search structurally (Ultimate Edition only)", "vscode": "" },
-              { "eclipse": "", "intellij": "Ctrl + Shift + M", "description": "Replace structurally (Ultimate Edition only)", "vscode": "" }
-            ]
-          },
-          {
-            "shortcutScope": "Usage search",
-            "shortcuts": [
+              { "eclipse": "", "intellij": "Ctrl + Shift + M", "description": "Replace structurally (Ultimate Edition only)", "vscode": "" },
+
               { "eclipse": "Ctrl + G", "intellij": "Alt + F7", "description": "Find usages", "vscode": "Shift+F12" },
               { "eclipse": "Ctrl + Shift + G", "intellij": "Ctrl + F7", "description": "Find usages in file", "vscode": "Shift+F12" },
               { "eclipse": "", "intellij": "Ctrl + Shift + F7", "description": "Highlight usages in file", "vscode": "" },
               { "eclipse": "", "intellij": "Ctrl + Alt + F7", "description": "Show usages", "vscode": "Shift+F12" },
-              { "eclipse": "Ctrl + Shift + U", "intellij": "", "description": "Show occurences in File", "vscode": "" }
-            ]
-          },
-          {
-            "shortcutScope": "Compile and Run",
-            "shortcuts": [
+              { "eclipse": "Ctrl + Shift + U", "intellij": "", "description": "Show occurences in File", "vscode": "" },
+
               { "eclipse": "Ctrl + B", "intellij": "Ctrl + F9", "description": "Make project (compile modifed and dependent)", "vscode": "Ctrl+Shift+B" },
               { "eclipse": "", "intellij": "Ctrl + Shift + F9", "description": "Compile selected file, package or module", "vscode": "" },
               { "eclipse": "", "intellij": "Alt + Shift + F10", "description": "Select configuration and run", "vscode": "" },
               { "eclipse": "", "intellij": "Alt + Shift + F9", "description": "Select configuration and debug", "vscode": "" },
               { "eclipse": "Ctrl + F11", "intellij": "Shift + F10", "description": "Run", "vscode": "F5" },
               { "eclipse": "", "intellij": "Shift + F9", "description": "Debug", "vscode": "F5" },
-              { "eclipse": "", "intellij": "Ctrl + Shift + F10", "description": "Run context configuration from editor", "vscode": "" }
-            ]
-          },
-          {
-            "shortcutScope": "Debugging",
-            "shortcuts": [
+              { "eclipse": "", "intellij": "Ctrl + Shift + F10", "description": "Run context configuration from editor", "vscode": "" },
+
               { "eclipse": "F6", "intellij": "F8", "description": "Step over", "vscode": "F10" },
               { "eclipse": "F5", "intellij": "F7", "description": "Step into", "vscode": "F11" },
               { "eclipse": "", "intellij": "Shift + F7", "description": "Smart step into", "vscode": "" },
@@ -171,12 +171,8 @@ angular.module('ideShortcuts', ['ngSanitize'])
               { "eclipse": "Ctrl + U", "intellij": "Alt + F8", "description": "Evaluate expression", "vscode": "Shift+F9" },
               { "eclipse": "F8", "intellij": "F9", "description": "Resume program", "vscode": "F5" },
               { "eclipse": "Ctrl + Shift + B", "intellij": "Ctrl + F8", "description": "Toggle breakpoint", "vscode": "F9" },
-              { "eclipse": "Alt + Shift + Q, B", "intellij": "Ctrl + Shift + F8", "description": "View breakpoints", "vscode": "Ctrl+Shift+F8" }
-            ]
-          },
-          {
-            "shortcutScope": "Navigation",
-            "shortcuts": [
+              { "eclipse": "Alt + Shift + Q, B", "intellij": "Ctrl + Shift + F8", "description": "View breakpoints", "vscode": "Ctrl+Shift+F8" },
+
               { "eclipse": "Ctrl + Shift + T", "intellij": "Ctrl + N", "description": "Go to class", "vscode": "Ctrl+T" },
               { "eclipse": "Ctrl + Shift + R", "intellij": "Ctrl + Shift + N", "description": "Go to file", "vscode": "Ctrl+P" },
               { "eclipse": "", "intellij": "Ctrl + Shift + T", "description": "Navigating between Test and Test-Subject", "vscode": "" },
@@ -209,21 +205,13 @@ angular.module('ideShortcuts', ['ngSanitize'])
               { "eclipse": "Ctrl + Alt + H", "intellij": "Ctrl + Alt + H", "description": "Call hierarchy", "vscode": "Shift+Alt+H" },
               { "eclipse": "Ctrl + . / Ctrl + ,", "intellij": "F2 / Shift + F2", "description": "Next/previous highlighted error", "vscode": "F8" },
               { "eclipse": "", "intellij": "F4 / Ctrl + Enter", "description": "Edit source / View source", "vscode": "" },
-              { "eclipse": "Alt + Shift + B", "intellij": "Alt + Home", "description": "Show navigation bar", "vscode": "" }
-            ]
-          },
-          {
-            "shortcutScope": "Bookmarks",
-            "shortcuts": [
+              { "eclipse": "Alt + Shift + B", "intellij": "Alt + Home", "description": "Show navigation bar", "vscode": "" },
+
               { "eclipse": "", "intellij": "F11", "description": "Toggle bookmark", "vscode": "" },
               { "eclipse": "", "intellij": "Ctrl + F11", "description": "Toggle bookmark with mnemonic", "vscode": "" },
               { "eclipse": "", "intellij": "Ctrl + #[0-9]", "description": "Go to numbered bookmark", "vscode": "" },
-              { "eclipse": "", "intellij": "Shift + F11", "description": "Show bookmarks", "vscode": "" }
-            ]
-          },
-          {
-            "shortcutScope": "Refactoring",
-            "shortcuts": [
+              { "eclipse": "", "intellij": "Shift + F11", "description": "Show bookmarks", "vscode": "" },
+
               { "eclipse": "", "intellij": "F5", "description": "Copy", "vscode": "F5" },
               { "eclipse": "", "intellij": "F6", "description": "Move", "vscode": "F6" },
               { "eclipse": "", "intellij": "Alt + Delete", "description": "Safe Delete", "vscode": "Shift+Delete" },
@@ -235,21 +223,13 @@ angular.module('ideShortcuts', ['ngSanitize'])
               { "eclipse": "Alt + Shift + L", "intellij": "Ctrl + Alt + V", "description": "Extract Variable", "vscode": "Ctrl+." },
               { "eclipse": "Ctrl + 2, F", "intellij": "Ctrl + Alt + F", "description": "Extract Field", "vscode": "Ctrl+." },
               { "eclipse": "", "intellij": "Ctrl + Alt + C", "description": "Extract Constant", "vscode": "Ctrl+." },
-              { "eclipse": "", "intellij": "Ctrl + Alt + P", "description": "Extract Parameter", "vscode": "Ctrl+." }
-            ]
-          },
-          {
-            "shortcutScope": "VCS / Local History",
-            "shortcuts": [
+              { "eclipse": "", "intellij": "Ctrl + Alt + P", "description": "Extract Parameter", "vscode": "Ctrl+." },
+
               { "eclipse": "", "intellij": "Ctrl + K", "description": "Commit project to VCS", "vscode": "Ctrl+Shift+G" },
               { "eclipse": "", "intellij": "Ctrl + T", "description": "Update project from VCS", "vscode": "Ctrl+Shift+P, Git: Pull" },
               { "eclipse": "", "intellij": "Alt + Shift + C", "description": "View recent changes", "vscode": "Ctrl+Shift+G" },
-              { "eclipse": "", "intellij": "Alt + BackQuote `", "description": "'VCS' quick popup", "vscode": "Ctrl+Shift+G" }
-            ]
-          },
-          {
-            "shortcutScope": "Live Templates",
-            "shortcuts": [
+              { "eclipse": "", "intellij": "Alt + BackQuote `", "description": "'VCS' quick popup", "vscode": "Ctrl+Shift+G" },
+
               { "eclipse": "", "intellij": "Ctrl + Alt + J", "description": "Surround with Live Template", "vscode": "" },
               { "eclipse": "", "intellij": "Ctrl + J", "description": "Insert Live Template", "vscode": "Ctrl+Space" },
               { "eclipse": "", "intellij": "iter", "description": "Iteration according to Java SDK 1.5 style", "vscode": "" },
@@ -258,12 +238,8 @@ angular.module('ideShortcuts', ['ngSanitize'])
               { "eclipse": "", "intellij": "itit", "description": "Iterate elements of java.util.Iterator", "vscode": "" },
               { "eclipse": "", "intellij": "itli", "description": "Iterate elements of java.util.List", "vscode": "" },
               { "eclipse": "", "intellij": "psf", "description": "public static final", "vscode": "" },
-              { "eclipse": "", "intellij": "thr", "description": "throw new", "vscode": "" }
-            ]
-          },
-          {
-            "shortcutScope": "General",
-            "shortcuts": [
+              { "eclipse": "", "intellij": "thr", "description": "throw new", "vscode": "" },
+
               { "eclipse": "Ctrl + M", "intellij": "Alt + #[0-9]", "description": "Open corresponding tool window", "vscode": "Ctrl+Shift+E/G/D/X" },
               { "eclipse": "", "intellij": "Ctrl + S", "description": "Save all", "vscode": "Ctrl+S" },
               { "eclipse": "", "intellij": "Ctrl + Alt + Y", "description": "Synchronize", "vscode": "" },
@@ -276,6 +252,6 @@ angular.module('ideShortcuts', ['ngSanitize'])
               { "eclipse": "Ctrl + 3", "intellij": "Ctrl + Shift + A", "description": "Find Action", "vscode": "F1" },
               { "eclipse": "", "intellij": "Ctrl + Tab", "description": "Switch between tabs and tool window", "vscode": "Ctrl+Tab" }
             ]
-          }
+          },
         ];
     });
