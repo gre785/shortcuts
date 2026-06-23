@@ -1,6 +1,6 @@
 /* app css stylesheet */
 
-.highlighted { background: yellow; }
+.highlighted { background: #ffeb3b; color: #000; }
 .fa-times{ cursor: pointer; }
 .ng-cloak{ display: none; }
 
@@ -26,4 +26,63 @@
     font-weight: bold;
     border-radius: 2px;
     padding: 0 2px;
+}
+
+/* Dark Mode Styles */
+.dark-mode-panel {
+    background-color: #2d2d2d !important;
+    border-color: #444 !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-mode-panel .panel-body {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+}
+
+.dark-mode-input {
+    background-color: #333 !important;
+    border-color: #555 !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-mode-input::placeholder {
+    color: #999 !important;
+}
+
+.dark-mode-addon {
+    background-color: #333 !important;
+    border-color: #555 !important;
+    color: #e0e0e0 !important;
+}
+
+.dark-mode-label {
+    color: #e0e0e0;
+}
+
+.dark-mode-table {
+    background-color: #1a1a1a;
+    border-color: #444;
+}
+
+.dark-mode-table thead tr {
+    background-color: #2D3748;
+}
+
+.dark-mode-table tbody tr {
+    background-color: #2a2a2a;
+    border-color: #444;
+}
+
+.dark-mode-table tbody tr td {
+    color: #e0e0e0;
+    border-color: #444;
+}
+
+.dark-mode-table tbody tr:hover {
+    background-color: #353535;
+}
+
+.dark-mode-table tbody tr td span {
+    color: #e0e0e0;
 }
