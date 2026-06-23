@@ -44,6 +44,13 @@ angular.module('ideShortcuts', ['ngSanitize'])
                 112: 'F1', 113: 'F2', 114: 'F3', 115: 'F4', 116: 'F5', 117: 'F6',
                 118: 'F7', 119: 'F8', 120: 'F9', 121: 'F10', 122: 'F11', 123: 'F12',
             };
+            // Map modern browser event.key arrow names to your clean display names
+            const arrowKeyMap = {
+                'ArrowUp': 'Up',
+                'ArrowDown': 'Down',
+                'ArrowLeft': 'Left',
+                'ArrowRight': 'Right'
+            };
 
             const isModifierPressed = event.ctrlKey || event.altKey || event.shiftKey;
             const pressedKey = event.key; // Use event.key for modern browsers
@@ -65,7 +72,11 @@ angular.module('ideShortcuts', ['ngSanitize'])
 
                 // Use the modern `event.key` property for the character or name of the key.
                 // It correctly handles capitalization and special characters.
-                $scope.search = result + pressedKey;
+                let cleanKey = arrowKeyMap[pressedKey] || pressedKey;
+                if (cleanKey.length === 1) {
+                    cleanKey = cleanKey.toUpperCase();
+                }
+                $scope.search = result + cleanKey;
 
             } else if (specialKeyMap[event.keyCode]) {
                 // Handle cases where a special key is pressed WITHOUT a modifier (e.g., just "Delete")
@@ -94,7 +105,7 @@ angular.module('ideShortcuts', ['ngSanitize'])
                 {"description": "Move Line Up / Down", "eclipse": "Alt + Up / Down", "vscode": "Alt + Up / Down", "intellij": "Ctrl + Shift + Up/Down", "visualstudio": "Alt + Up / Down", "qt": "Ctrl + Shift + Up/Down"},
                 {"description": "Go to Definition / Declaration", "eclipse": "F3", "vscode": "F12", "intellij": "Ctrl + B", "visualstudio": "F12", "qt": "F2"},
                 {"description": "Find Usages / References", "eclipse": "Ctrl + Shift + G", "vscode": "Shift + F12", "intellij": "Alt + F7", "visualstudio": "Shift + F12", "qt": "Shift + F2"},
-                {"description": "Navigate Backward (Last Position)", "eclipse": "Alt + Left Arrow", "vscode": "Alt + Left Arrow", "intellij": "Ctrl + Alt + Left", "visualstudio": "Ctrl + -", "qt": "Alt + Left Arrow"},
+                {"description": "Navigate Backward (Last Position)", "eclipse": "Alt + Left", "vscode": "Alt + Left", "intellij": "Ctrl + Alt + Left", "visualstudio": "Ctrl + -", "qt": "Alt + Left"},
                 {"description": "Show File Outline / Quick Symbol", "eclipse": "Ctrl + O", "vscode": "Ctrl + Shift + O", "intellij": "Ctrl + F12", "visualstudio": "Ctrl + Alt + Down", "qt": "Ctrl + Shift + O"},
                 {"description": "Rename Symbol (Global Safely)", "eclipse": "Alt + Shift + R", "vscode": "F2", "intellij": "Shift + F6", "visualstudio": "Ctrl + R, Ctrl + R", "qt": "Ctrl + Shift + R"},
                 {"description": "Show Quick Fixes / Intentions", "eclipse": "Ctrl + 1", "vscode": "Ctrl + .", "intellij": "Alt + Enter", "visualstudio": "Ctrl + .", "qt": "Alt + Enter"},
@@ -114,14 +125,14 @@ angular.module('ideShortcuts', ['ngSanitize'])
                 {"description": "Find Next Match", "eclipse": "Ctrl + K", "vscode": "F3", "intellij": "F3", "visualstudio": "F3", "qt": "F3"},
                 {"description": "Find Previous Match", "eclipse": "Ctrl + Shift + K", "vscode": "Shift + F3", "intellij": "Shift + F3", "visualstudio": "Shift + F3", "qt": "Shift + F3"},
                 {"description": "Go to Line Number", "eclipse": "Ctrl + L", "vscode": "Ctrl + G", "intellij": "Ctrl + G", "visualstudio": "Ctrl + G", "qt": "Ctrl + L"},
-                {"description": "Duplicate Current Line", "eclipse": "Ctrl + Alt + Down", "vscode": "Shift + Alt + Down", "intellij": "Ctrl + D", "visualstudio": "Ctrl + D", "qt": "Ctrl + Alt + Down"},
+                {"description": "DUplicate Current Line", "eclipse": "Ctrl + Alt + Down", "vscode": "Shift + Alt + Down", "intellij": "Ctrl + D", "visualstudio": "Ctrl + D", "qt": "Ctrl + Alt + Down"},
                 {"description": "Delete Current Line", "eclipse": "Ctrl + D", "vscode": "Ctrl + Shift + K", "intellij": "Ctrl + Y", "visualstudio": "Ctrl + Line Delete", "qt": "Shift + Del"},
                 {"description": "Toggle Block / Multiline Comment", "eclipse": "Ctrl + Shift + /", "vscode": "Shift + Alt + A", "intellij": "Ctrl + Shift + /", "visualstudio": "Ctrl + Shift + /", "qt": "Ctrl + Shift + /"},
                 {"description": "Toggle Word Wrap", "eclipse": "Alt + Shift + Y", "vscode": "Alt + Z", "intellij": "Ctrl + F12 (Config)", "visualstudio": "Ctrl + E, Ctrl + W", "qt": "Alt + W"},
                 {"description": "Show Parameters Info / Signature Help", "eclipse": "Ctrl + Shift + Space", "vscode": "Ctrl + Shift + Space", "intellij": "Ctrl + P", "visualstudio": "Ctrl + Shift + Space", "qt": "Ctrl + Shift + Space"},
                 {"description": "Go to Matching Bracket / Brace", "eclipse": "Ctrl + Shift + P", "vscode": "Ctrl + Shift + \\", "intellij": "Ctrl + ] / [", "visualstudio": "Ctrl + ]", "qt": "Ctrl + R"},
-                {"description": "Select Word / Expand Selection", "eclipse": "Alt + Shift + Up Arrow", "vscode": "Shift + Alt + Right Arrow", "intellij": "Ctrl + W", "visualstudio": "Ctrl + Shift + W", "qt": "Ctrl + Shift + Up"},
-                {"description": "Shrink / Contract Selection", "eclipse": "Alt + Shift + Down Arrow", "vscode": "Shift + Alt + Left Arrow", "intellij": "Ctrl + Shift + W", "visualstudio": "Ctrl + Shift + M", "qt": "Ctrl + Shift + Down"},
+                {"description": "Select Word / Expand Selection", "eclipse": "Alt + Shift + Up", "vscode": "Shift + Alt + Right", "intellij": "Ctrl + W", "visualstudio": "Ctrl + Shift + W", "qt": "Ctrl + Shift + Up"},
+                {"description": "Shrink / Contract Selection", "eclipse": "Alt + Shift + Down", "vscode": "Shift + Alt + Left", "intellij": "Ctrl + Shift + W", "visualstudio": "Ctrl + Shift + M", "qt": "Ctrl + Shift + Down"},
                 {"description": "Transform Selection to Uppercase", "eclipse": "Ctrl + Shift + X", "vscode": "Transform via Command", "intellij": "Ctrl + Shift + U", "visualstudio": "Ctrl + Shift + U", "qt": "Alt + U"},
                 {"description": "Transform Selection to Lowercase", "eclipse": "Ctrl + Shift + Y", "vscode": "Transform via Command", "intellij": "Ctrl + Shift + U", "visualstudio": "Ctrl + U", "qt": "Alt + L"},
                 {"description": "Insert Line Below Current Line", "eclipse": "Shift + Enter", "vscode": "Ctrl + Enter", "intellij": "Shift + Enter", "visualstudio": "Ctrl + Shift + Enter", "qt": "Ctrl + Enter"},
@@ -130,7 +141,7 @@ angular.module('ideShortcuts', ['ngSanitize'])
                 {"description": "Open Type Hierarchy", "eclipse": "F4", "vscode": "Via Extension", "intellij": "Ctrl + H", "visualstudio": "F4", "qt": "Ctrl + Shift + T"},
                 {"description": "Go to Next Error / Warning", "eclipse": "Ctrl + .", "vscode": "F8", "intellij": "F2", "visualstudio": "F8", "qt": "Alt + Down"},
                 {"description": "Go to Previous Error / Warning", "eclipse": "Ctrl + ,", "vscode": "Shift + F8", "intellij": "Shift + F2", "visualstudio": "Shift + F8", "qt": "Alt + Up"},
-                {"description": "Navigate Forward (Forward History)", "eclipse": "Alt + Right Arrow", "vscode": "Alt + Right Arrow", "intellij": "Ctrl + Alt + Right", "visualstudio": "Ctrl + Shift + -", "qt": "Alt + Right Arrow"},
+                {"description": "Navigate Forward (Forward History)", "eclipse": "Alt + Right", "vscode": "Alt + Right", "intellij": "Ctrl + Alt + Right", "visualstudio": "Ctrl + Shift + -", "qt": "Alt + Right"},
                 {"description": "Go to Last Edit Location", "eclipse": "Ctrl + Q", "vscode": "Ctrl + K Ctrl + Q", "intellij": "Ctrl + Shift + Backspace", "visualstudio": "Ctrl + Shift + Backspace", "qt": "Ctrl + Shift + Backspace"},
                 {"description": "Toggle Bookmark", "eclipse": "Ctrl + F10, B", "vscode": "Ctrl + Alt + K", "intellij": "F11", "visualstudio": "Ctrl + K, Ctrl + K", "qt": "Ctrl + M"},
                 {"description": "Go to Next Bookmark", "eclipse": "Via Context Menu", "vscode": "Ctrl + Alt + L", "intellij": "Ctrl + F11", "visualstudio": "Ctrl + K, Ctrl + N", "qt": "Ctrl + ."},
@@ -142,7 +153,7 @@ angular.module('ideShortcuts', ['ngSanitize'])
                 {"description": "Clean and Rebuild Project", "eclipse": "Project -> Clean", "vscode": "Task: Clean", "intellij": "Build -> Rebuild", "visualstudio": "Ctrl + Shift + Enter (Clean menu)", "qt": "Build -> Clean Project"},
                 {"description": "Run Unit Tests", "eclipse": "Alt + Shift + X, T", "vscode": "Ctrl + R, T", "intellij": "Ctrl + Shift + F10", "visualstudio": "Ctrl + R, T", "qt": "Ctrl + T"},
                 {"description": "View / Evaluate Expression (While Debugging)", "eclipse": "Ctrl + Shift + I", "vscode": "Via Debug Console", "intellij": "Alt + F8", "visualstudio": "QuickWatch", "qt": "Ctrl + Shift + F5"},
-                {"description": "Show Quick Documentation Lookup", "eclipse": "F2", "vscode": "Ctrl + K, Ctrl + I", "intellij": "Ctrl + Q", "visualstudio": "Ctrl + K, Ctrl + I", "qt": "F1"},
+                {"description": "Show Quick Documentation LookUp", "eclipse": "F2", "vscode": "Ctrl + K, Ctrl + I", "intellij": "Ctrl + Q", "visualstudio": "Ctrl + K, Ctrl + I", "qt": "F1"},
                 {"description": "Close Active Editor Tab", "eclipse": "Ctrl + W", "vscode": "Ctrl + W", "intellij": "Ctrl + F4", "visualstudio": "Ctrl + F4", "qt": "Ctrl + W"},
                 {"description": "Reopen Closed Editor Tab", "eclipse": "Ctrl + Shift + T", "vscode": "Ctrl + Shift + T", "intellij": "Ctrl + Shift + T", "visualstudio": "Ctrl + K, Ctrl + Z", "qt": "---"},
                 {"description": "Switch to Next Editor Tab", "eclipse": "Ctrl + PageDown", "vscode": "Ctrl + PageDown", "intellij": "Alt + Right", "visualstudio": "Ctrl + Alt + PageDown", "qt": "Ctrl + PageDown"},
@@ -162,8 +173,8 @@ angular.module('ideShortcuts', ['ngSanitize'])
                 {"description": "Select All Occurrences of Current Symbol", "eclipse": "Alt + Shift + U", "vscode": "Ctrl + Shift + L", "intellij": "Ctrl + Alt + Shift + J", "visualstudio": "Shift + Alt + ;", "qt": "---"},
                 {"description": "Delete Word Ahead", "eclipse": "Ctrl + Delete", "vscode": "Ctrl + Delete", "intellij": "Ctrl + Delete", "visualstudio": "Ctrl + Delete", "qt": "Ctrl + Delete"},
                 {"description": "Delete Word Behind", "eclipse": "Ctrl + Backspace", "vscode": "Ctrl + Backspace", "intellij": "Ctrl + Backspace", "visualstudio": "Ctrl + Backspace", "qt": "Ctrl + Backspace"},
-                {"description": "Move Cursor to Next Word", "eclipse": "Ctrl + Right Arrow", "vscode": "Ctrl + Right Arrow", "intellij": "Ctrl + Right Arrow", "visualstudio": "Ctrl + Right Arrow", "qt": "Ctrl + Right Arrow"},
-                {"description": "Move Cursor to Previous Word", "eclipse": "Ctrl + Left Arrow", "vscode": "Ctrl + Left Arrow", "intellij": "Ctrl + Left Arrow", "visualstudio": "Ctrl + Left Arrow", "qt": "Ctrl + Left Arrow"},
+                {"description": "Move Cursor to Next Word", "eclipse": "Ctrl + Right", "vscode": "Ctrl + Right", "intellij": "Ctrl + Right", "visualstudio": "Ctrl + Right", "qt": "Ctrl + Right"},
+                {"description": "Move Cursor to Previous Word", "eclipse": "Ctrl + Left", "vscode": "Ctrl + Left", "intellij": "Ctrl + Left", "visualstudio": "Ctrl + Left", "qt": "Ctrl + Left"},
                 {"description": "Select to Next Word", "eclipse": "Ctrl + Shift + Right", "vscode": "Ctrl + Shift + Right", "intellij": "Ctrl + Shift + Right", "visualstudio": "Ctrl + Shift + Right", "qt": "Ctrl + Shift + Right"},
                 {"description": "Select to Previous Word", "eclipse": "Ctrl + Shift + Left", "vscode": "Ctrl + Shift + Left", "intellij": "Ctrl + Shift + Left", "visualstudio": "Ctrl + Shift + Left", "qt": "Ctrl + Shift + Left"},
                 {"description": "Go to Start of Document", "eclipse": "Ctrl + Home", "vscode": "Ctrl + Home", "intellij": "Ctrl + Home", "visualstudio": "Ctrl + Home", "qt": "Ctrl + Home"},
@@ -178,8 +189,8 @@ angular.module('ideShortcuts', ['ngSanitize'])
                 {"description": "Compare File with Clipboard / Branch", "eclipse": "Context Menu -> Compare With", "vscode": "Via Explorer Focus", "intellij": "Ctrl + D (In Git context)", "visualstudio": "Tools -> Diff", "qt": "Tools -> Git -> Diff"},
                 {"description": "Go to Implementation", "eclipse": "Ctrl + Click", "vscode": "Ctrl + F12", "intellij": "Ctrl + Alt + B", "visualstudio": "Ctrl + F12", "qt": "Ctrl + Shift + F2"},
                 {"description": "Open Command Line Interface / Prompt", "eclipse": "Alt + Shift + X", "vscode": "Ctrl + Shift + C", "intellij": "Ctrl + Alt + T", "visualstudio": "Ctrl + K, Ctrl + P", "qt": "Ctrl + Shift + K"},
-                {"description": "Scroll Window Down One Line", "eclipse": "Ctrl + Down Arrow", "vscode": "Ctrl + Down Arrow", "intellij": "Ctrl + Down Arrow", "visualstudio": "Ctrl + Down Arrow", "qt": "Ctrl + Down Arrow"},
-                {"description": "Scroll Window Up One Line", "eclipse": "Ctrl + Up Arrow", "vscode": "Ctrl + Up Arrow", "intellij": "Ctrl + Up Arrow", "visualstudio": "Ctrl + Up Arrow", "qt": "Ctrl + Up Arrow"},
+                {"description": "Scroll Window Down One Line", "eclipse": "Ctrl + Down", "vscode": "Ctrl + Down", "intellij": "Ctrl + Down", "visualstudio": "Ctrl + Down", "qt": "Ctrl + Down"},
+                {"description": "Scroll Window Up One Line", "eclipse": "Ctrl + Up", "vscode": "Ctrl + Up", "intellij": "Ctrl + Up", "visualstudio": "Ctrl + Up", "qt": "Ctrl + Up"},
                 {"description": "Show Type Definition", "eclipse": "Via Hover", "vscode": "Ctrl + Shift + F10", "intellij": "Ctrl + Shift + P", "visualstudio": "Ctrl + K, Ctrl + V", "qt": "F1"},
                 {"description": "Go to Next Method", "eclipse": "Ctrl + Shift + Down", "vscode": "Ctrl + Shift + ]", "intellij": "Alt + Down", "visualstudio": "Ctrl + Up/Down", "qt": "Alt + Down"},
                 {"description": "Go to Previous Method", "eclipse": "Ctrl + Shift + Up", "vscode": "Ctrl + Shift + [", "intellij": "Alt + Up", "visualstudio": "Ctrl + Up/Down", "qt": "Alt + Up"},
