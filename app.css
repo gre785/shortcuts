@@ -19,3 +19,11 @@
     .toc {display: none; }
     .container {padding-right: 20px; }
 }
+
+.highlighted-match {
+    background-color: #ffeb3b; /* Bright Yellow */
+    color: #000;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 2px;
+}
